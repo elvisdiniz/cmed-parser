@@ -5,7 +5,7 @@ const prompt = require("prompt")
 const tmp = require("tmp")
 const zl = require("zip-lib")
 
-const PRINCIPIO_ATIVO = "PRINCÍPIO ATIVO"
+const PRINCIPIO_ATIVO = "SUBSTÂNCIA"
 const CNPJ = "CNPJ"
 const LABORATORIO = "LABORATÓRIO"
 const CODIGO_GGREM = "CÓDIGO GGREM"
@@ -21,6 +21,7 @@ const REGIME_DE_PRECO = "REGIME DE PREÇO"
 const PF_SEM_IMPOSTOS = "PF Sem Impostos"
 const PF_0 = "PF 0%"
 const PF_12 = "PF 12%"
+const PF_12_ALC = "PF 12% ALC"
 const PF_17 = "PF 17%"
 const PF_17_ALC = "PF 17% ALC"
 const PF_175 = "PF 17,5%"
@@ -28,12 +29,17 @@ const PF_175_ALC = "PF 17,5% ALC"
 const PF_18 = "PF 18%"
 const PF_18_ALC = "PF 18% ALC"
 const PF_19 = "PF 19%"
+const PF_19_ALC = "PF 19% ALC"
 const PF_20 = "PF 20%"
+const PF_20_ALC = "PF 20% ALC"
 const PF_21 = "PF 21%"
+const PF_21_ALC = "PF 21% ALC"
 const PF_22 = "PF 22%"
-const PMVG_SEM_IMPOSTOS = "PMVG Sem Impostos"
+const PF_22_ALC = "PF 22% ALC"
+const PMVG_SEM_IMPOSTOS = "PMVG Sem Imposto"
 const PMVG_0 = "PMVG 0%"
 const PMVG_12 = "PMVG 12%"
+const PMVG_12_ALC = "PMVG 12% ALC"
 const PMVG_17 = "PMVG 17%"
 const PMVG_17_ALC = "PMVG 17% ALC"
 const PMVG_175 = "PMVG 17,5%"
@@ -41,9 +47,13 @@ const PMVG_175_ALC = "PMVG 17,5% ALC"
 const PMVG_18 = "PMVG 18%"
 const PMVG_18_ALC = "PMVG 18% ALC"
 const PMVG_19 = "PMVG 19%"
+const PMVG_19_ALC = "PMVG 19% ALC"
 const PMVG_20 = "PMVG 20%"
+const PMVG_20_ALC = "PMVG 20% ALC"
 const PMVG_21 = "PMVG 21%"
+const PMVG_21_ALC = "PMVG 21% ALC"
 const PMVG_22 = "PMVG 22%"
+const PMVG_22_ALC = "PMVG 22% ALC"
 const RESTRICAO_HOSPITALAR = "RESTRIÇÃO HOSPITALAR"
 const CAP = "CAP"
 const CONFAZ_87 = "CONFAZ 87"
@@ -71,6 +81,7 @@ const cabecalho = [
   PF_SEM_IMPOSTOS,
   PF_0,
   PF_12,
+  PF_12_ALC,
   PF_17,
   PF_17_ALC,
   PF_175,
@@ -78,12 +89,17 @@ const cabecalho = [
   PF_18,
   PF_18_ALC,
   PF_19,
+  PF_19_ALC,
   PF_20,
+  PF_20_ALC,
   PF_21,
+  PF_21_ALC,
   PF_22,
+  PF_22_ALC,
   PMVG_SEM_IMPOSTOS,
   PMVG_0,
   PMVG_12,
+  PMVG_12_ALC,
   PMVG_17,
   PMVG_17_ALC,
   PMVG_175,
@@ -91,9 +107,13 @@ const cabecalho = [
   PMVG_18,
   PMVG_18_ALC,
   PMVG_19,
+  PMVG_19_ALC,
   PMVG_20,
+  PMVG_20_ALC,
   PMVG_21,
+  PMVG_21_ALC,
   PMVG_22,
+  PMVG_22_ALC,
   RESTRICAO_HOSPITALAR,
   CAP,
   CONFAZ_87,
