@@ -30,8 +30,10 @@ const PF_18 = "PF 18%"
 const PF_18_ALC = "PF 18% ALC"
 const PF_19 = "PF 19%"
 const PF_19_ALC = "PF 19% ALC"
+const PF_195 = "PF 19,5%"
 const PF_20 = "PF 20%"
 const PF_20_ALC = "PF 20% ALC"
+const PF_205 = "PF 20,5%"
 const PF_21 = "PF 21%"
 const PF_21_ALC = "PF 21% ALC"
 const PF_22 = "PF 22%"
@@ -48,8 +50,10 @@ const PMVG_18 = "PMVG 18%"
 const PMVG_18_ALC = "PMVG 18% ALC"
 const PMVG_19 = "PMVG 19%"
 const PMVG_19_ALC = "PMVG 19% ALC"
+const PMVG_195 = "PMVG 19,5%"
 const PMVG_20 = "PMVG 20%"
 const PMVG_20_ALC = "PMVG 20% ALC"
+const PMVG_205 = "PMVG 20,5%"
 const PMVG_21 = "PMVG 21%"
 const PMVG_21_ALC = "PMVG 21% ALC"
 const PMVG_22 = "PMVG 22%"
@@ -59,8 +63,7 @@ const CAP = "CAP"
 const CONFAZ_87 = "CONFAZ 87"
 const ICMS_0 = "ICMS 0%"
 const ANALISE_RECURSAL = "ANÁLISE RECURSAL"
-const LISTA_CONCESSAO_CREDITO_TRIBUTARIO =
-  "LISTA DE CONCESSÃO DE CRÉDITO TRIBUTÁRIO (PIS/COFINS)"
+const LISTA_CONCESSAO_CREDITO_TRIBUTARIO = "LISTA DE CONCESSÃO DE CRÉDITO TRIBUTÁRIO (PIS/COFINS)"
 const COMERCIALIZACAO_2022 = "COMERCIALIZAÇÃO 2022"
 const TARJA = "TARJA"
 
@@ -90,8 +93,10 @@ const cabecalho = [
   PF_18_ALC,
   PF_19,
   PF_19_ALC,
+  PF_195,
   PF_20,
   PF_20_ALC,
+  PF_205,
   PF_21,
   PF_21_ALC,
   PF_22,
@@ -108,8 +113,10 @@ const cabecalho = [
   PMVG_18_ALC,
   PMVG_19,
   PMVG_19_ALC,
+  PMVG_195,
   PMVG_20,
   PMVG_20_ALC,
+  PMVG_205,
   PMVG_21,
   PMVG_21_ALC,
   PMVG_22,
@@ -168,7 +175,7 @@ prompt.get(properties, function (err, metadados) {
 
   let cnpjRegex = new RegExp("^[0-9]{2}(.[0-9]{3}){2}/[0-9]{4}-[0-9]{2}$")
   let valoresRegex = new RegExp("^(PF |PMVG )([0-2]|S)")
-  let realRegex = new RegExp("^[0-9]+(.|,)[0-9]+$")
+  let realRegex = new RegExp("^[0-9]+(.|,)[0-9]+")
 
   let planilhaObservacoes = []
   let laboratoriosList = {}
