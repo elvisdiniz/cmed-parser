@@ -31,6 +31,7 @@ const PF_18_ALC = "PF 18% ALC"
 const PF_19 = "PF 19%"
 const PF_19_ALC = "PF 19% ALC"
 const PF_195 = "PF 19,5%"
+const PF_195_ALC = "PF 19,5% ALC"
 const PF_20 = "PF 20%"
 const PF_20_ALC = "PF 20% ALC"
 const PF_205 = "PF 20,5%"
@@ -51,6 +52,7 @@ const PMVG_18_ALC = "PMVG 18% ALC"
 const PMVG_19 = "PMVG 19%"
 const PMVG_19_ALC = "PMVG 19% ALC"
 const PMVG_195 = "PMVG 19,5%"
+const PMVG_195_ALC = "PMVG 19,5% ALC"
 const PMVG_20 = "PMVG 20%"
 const PMVG_20_ALC = "PMVG 20% ALC"
 const PMVG_205 = "PMVG 20,5%"
@@ -94,6 +96,7 @@ const cabecalho = [
   PF_19,
   PF_19_ALC,
   PF_195,
+  PF_195_ALC,
   PF_20,
   PF_20_ALC,
   PF_205,
@@ -114,6 +117,7 @@ const cabecalho = [
   PMVG_19,
   PMVG_19_ALC,
   PMVG_195,
+  PMVG_195_ALC,
   PMVG_20,
   PMVG_20_ALC,
   PMVG_205,
