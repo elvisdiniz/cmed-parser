@@ -9,19 +9,15 @@
 			"extensions": [
 				"esbenp.prettier-vscode",
 				"eamodio.gitlens",
-				"github.copilot",
 				"donjayamanne.githistory",
 				"dbaeumer.vscode-eslint",
 				"adpyke.codesnap",
 				"mhutchie.git-graph",
 				"sleistner.vscode-fileutils",
-				"VisualStudioExptTeam.vscodeintellicode",
-				"github.vscode-github-actions"
+				"VisualStudioExptTeam.vscodeintellicode"
 			],
 			"settings": {
-				"editor.defaultFormatter": "esbenp.prettier-vscode",
-				"dotfiles.repository": "elvisdiniz/dotfiles",
-				"dotfiles.installCommand": "install.sh"
+				"editor.defaultFormatter": "esbenp.prettier-vscode"
 			}
 		}
 	},
@@ -35,10 +31,7 @@
 			"configureZshAsDefaultShell": "true",
 			"installOhMyZsh": "false"
 		}
-	},
-	"runArgs": [
-		"--network=backend"
-	]
+	}
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
