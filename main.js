@@ -35,11 +35,16 @@ const PF_195_ALC = "PF 19,5% ALC"
 const PF_20 = "PF 20%"
 const PF_20_ALC = "PF 20% ALC"
 const PF_205 = "PF 20,5%"
+const PF_205_ALC = "PF 20,5% ALC"
 const PF_21 = "PF 21%"
 const PF_21_ALC = "PF 21% ALC"
 const PF_22 = "PF 22%"
 const PF_22_ALC = "PF 22% ALC"
-const PMVG_SEM_IMPOSTOS = "PMVG Sem Imposto"
+const PF_225 = "PF 22,5%"
+const PF_225_ALC = "PF 22,5% ALC"
+const PF_23 = "PF 23%"
+const PF_23_ALC = "PF 23% ALC"
+const PMVG_SEM_IMPOSTOS = "PMVG Sem Impostos"
 const PMVG_0 = "PMVG 0%"
 const PMVG_12 = "PMVG 12%"
 const PMVG_12_ALC = "PMVG 12% ALC"
@@ -56,17 +61,22 @@ const PMVG_195_ALC = "PMVG 19,5% ALC"
 const PMVG_20 = "PMVG 20%"
 const PMVG_20_ALC = "PMVG 20% ALC"
 const PMVG_205 = "PMVG 20,5%"
+const PMVG_205_ALC = "PMVG 20,5% ALC"
 const PMVG_21 = "PMVG 21%"
 const PMVG_21_ALC = "PMVG 21% ALC"
 const PMVG_22 = "PMVG 22%"
 const PMVG_22_ALC = "PMVG 22% ALC"
+const PMVG_225 = "PMVG 22,5%"
+const PMVG_225_ALC = "PMVG 22,5% ALC"
+const PMVG_23 = "PMVG 23%"
+const PMVG_23_ALC = "PMVG 23% ALC"
 const RESTRICAO_HOSPITALAR = "RESTRIÇÃO HOSPITALAR"
 const CAP = "CAP"
 const CONFAZ_87 = "CONFAZ 87"
 const ICMS_0 = "ICMS 0%"
 const ANALISE_RECURSAL = "ANÁLISE RECURSAL"
 const LISTA_CONCESSAO_CREDITO_TRIBUTARIO = "LISTA DE CONCESSÃO DE CRÉDITO TRIBUTÁRIO (PIS/COFINS)"
-const COMERCIALIZACAO_2022 = "COMERCIALIZAÇÃO 2022"
+const COMERCIALIZACAO_2024 = "COMERCIALIZAÇÃO 2024"
 const TARJA = "TARJA"
 
 const cabecalho = [
@@ -100,10 +110,15 @@ const cabecalho = [
   PF_20,
   PF_20_ALC,
   PF_205,
+  PF_205_ALC,
   PF_21,
   PF_21_ALC,
   PF_22,
   PF_22_ALC,
+  PF_225,
+  PF_225_ALC,
+  PF_23,
+  PF_23_ALC,
   PMVG_SEM_IMPOSTOS,
   PMVG_0,
   PMVG_12,
@@ -121,17 +136,22 @@ const cabecalho = [
   PMVG_20,
   PMVG_20_ALC,
   PMVG_205,
+  PMVG_205_ALC,
   PMVG_21,
   PMVG_21_ALC,
   PMVG_22,
   PMVG_22_ALC,
+  PMVG_225,
+  PMVG_225_ALC,
+  PMVG_23,
+  PMVG_23_ALC,
   RESTRICAO_HOSPITALAR,
   CAP,
   CONFAZ_87,
   ICMS_0,
   ANALISE_RECURSAL,
   LISTA_CONCESSAO_CREDITO_TRIBUTARIO,
-  COMERCIALIZACAO_2022,
+  COMERCIALIZACAO_2024,
   TARJA,
 ]
 
@@ -195,15 +215,15 @@ prompt.get(properties, function (err, metadados) {
     } else if (!linhaCabecalho) {
       for (let [key, value] of Object.entries(tabelaParsed[i])) {
         let trimedValue = value.trim()
-        if (key !== trimedValue) {
+        if (key.replace(/\s+/ig, "") !== trimedValue.replace(/\s+/ig, "")) {
           console.error(
             'Cabeçalho inválido: "%s" encontrado, "%s" esperado',
             trimedValue,
             key
-          )
-          process.exit(1)
+          );
+          process.exit(1);
         } else {
-          linhaCabecalho = i + 1
+          linhaCabecalho = i + 1;
         }
       }
       continue
@@ -255,7 +275,7 @@ prompt.get(properties, function (err, metadados) {
         key === CONFAZ_87 ||
         key === ICMS_0 ||
         key === RESTRICAO_HOSPITALAR ||
-        key === COMERCIALIZACAO_2022
+        key === COMERCIALIZACAO_2024
       ) {
         trimedValue = trimedValue.toLowerCase() === "sim" ? true : false
       } else if (key === PRINCIPIO_ATIVO && !trimedValue) {
