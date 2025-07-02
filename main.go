@@ -1,7 +1,6 @@
 package main
 
 import (
-	"slices"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -9,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -205,34 +205,16 @@ func writeJSONFile(output Output, infilePath string) error {
 	return nil
 }
 
-func main() {
-	data := flag.String("data", time.Now().Format("2006-01-02"), "Data da planilha no formato AAAA-MM-DD")
-	dataAtualizacao := flag.String("data-atualizacao", "", "Data de atualização da planilha no formato AAAA-MM-DD")
-	flag.Parse()
-
-	if *dataAtualizacao == "" {
-		*dataAtualizacao = *data
-	}
-
-	if len(flag.Args()) != 1 {
-		log.Fatal("Uso: go run main.go [flags] <arquivo.xlsx>")
-	}
-
-	infilePath := flag.Args()[0]
-	ext := filepath.Ext(infilePath)
-	if ext != ".xlsx" {
-		log.Fatal("O arquivo de entrada deve ser .xlsx")
-	}
-
+func processExcelFile(infilePath, data, dataAtualizacao string) error {
 	f, err := excelize.OpenFile(infilePath)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("failed to open excel file: %w", err)
 	}
 
 	sheetName := f.GetSheetName(0)
 	rows, err := f.GetRows(sheetName)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("failed to get rows from sheet: %w", err)
 	}
 
 	var planilhaObservacoes []string
@@ -283,8 +265,8 @@ func main() {
 
 	output := Output{
 		Metadados: Metadados{
-			Data:            *data,
-			DataAtualizacao: *dataAtualizacao,
+			Data:            data,
+			DataAtualizacao: dataAtualizacao,
 			Observacoes:     planilhaObservacoes,
 		},
 		Medicamentos:  medicamentosList,
@@ -293,6 +275,31 @@ func main() {
 	}
 
 	if err := writeJSONFile(output, infilePath); err != nil {
+		return fmt.Errorf("failed to write JSON file: %w", err)
+	}
+	return nil
+}
+
+func main() {
+	data := flag.String("data", time.Now().Format("2006-01-02"), "Data da planilha no formato AAAA-MM-DD")
+	dataAtualizacao := flag.String("data-atualizacao", "", "Data de atualização da planilha no formato AAAA-MM-DD")
+	flag.Parse()
+
+	if *dataAtualizacao == "" {
+		*dataAtualizacao = *data
+	}
+
+	if len(flag.Args()) != 1 {
+		log.Fatal("Uso: go run main.go [flags] <arquivo.xlsx>")
+	}
+
+	infilePath := flag.Args()[0]
+	ext := filepath.Ext(infilePath)
+	if ext != ".xlsx" {
+		log.Fatal("O arquivo de entrada deve ser .xlsx")
+	}
+
+	if err := processExcelFile(infilePath, *data, *dataAtualizacao); err != nil {
 		log.Fatal(err)
 	}
 }
