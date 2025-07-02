@@ -277,35 +277,6 @@ func processExcelFile(infilePath, data, dataAtualizacao string) (Output, error) 
 	return output, nil
 }
 
-func main() {
-	data := flag.String("data", time.Now().Format("2006-01-02"), "Data da planilha no formato AAAA-MM-DD")
-	dataAtualizacao := flag.String("data-atualizacao", "", "Data de atualização da planilha no formato AAAA-MM-DD")
-	flag.Parse()
-
-	if *dataAtualizacao == "" {
-		*dataAtualizacao = *data
-	}
-
-	if len(flag.Args()) != 1 {
-		log.Fatal("Uso: go run main.go [flags] <arquivo.xlsx>")
-	}
-
-	infilePath := flag.Args()[0]
-	ext := filepath.Ext(infilePath)
-	if ext != ".xlsx" {
-		log.Fatal("O arquivo de entrada deve ser .xlsx")
-	}
-
-	output, err := processExcelFile(infilePath, *data, *dataAtualizacao)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := writeJSONFile(output, infilePath); err != nil {
-		log.Fatal(err)
-	}
-}
-
 func removeAccents(s string) string {
 	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
 	result, _, _ := transform.String(t, s)
@@ -339,4 +310,33 @@ func processaValorCelula(value any, header string) any {
 	}
 
 	return strValue
+}
+
+func main() {
+	data := flag.String("data", time.Now().Format("2006-01-02"), "Data da planilha no formato AAAA-MM-DD")
+	dataAtualizacao := flag.String("data-atualizacao", "", "Data de atualização da planilha no formato AAAA-MM-DD")
+	flag.Parse()
+
+	if *dataAtualizacao == "" {
+		*dataAtualizacao = *data
+	}
+
+	if len(flag.Args()) != 1 {
+		log.Fatal("Uso: go run main.go [flags] <arquivo.xlsx>")
+	}
+
+	infilePath := flag.Args()[0]
+	ext := filepath.Ext(infilePath)
+	if ext != ".xlsx" {
+		log.Fatal("O arquivo de entrada deve ser .xlsx")
+	}
+
+	output, err := processExcelFile(infilePath, *data, *dataAtualizacao)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := writeJSONFile(output, infilePath); err != nil {
+		log.Fatal(err)
+	}
 }
