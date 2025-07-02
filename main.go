@@ -303,7 +303,7 @@ func removeAccents(s string) string {
 	return result
 }
 
-func processaValorCelula(value interface{}, header string) interface{} {
+func processaValorCelula(value any, header string) any {
 	valoresRegex := regexp.MustCompile(`^(PF |PMVG )([0-2]|S)`)
 	realRegex := regexp.MustCompile(`^[0-9]+([\.,])[0-9]+\*?$`)
 
