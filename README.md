@@ -1,0 +1,72 @@
+# CMED Parser
+
+Este projeto consiste em um parser da tabela de preços de medicamentos da CMED (Câmara de Regulação do Mercado de Medicamentos), que converte os dados de um arquivo `.xlsx` para um formato `.json` estruturado.
+
+## Funcionalidades
+
+- Lê os dados de medicamentos a partir de um arquivo `.xlsx` fornecido.
+- Extrai metadados da planilha, como observações e datas.
+- Analisa e processa cada linha da tabela de medicamentos.
+- Realiza a limpeza e padronização dos dados, convertendo valores monetários para números e campos "Sim"/"Não" para booleanos.
+- Agrega listas únicas de laboratórios (por CNPJ) e apresentações de medicamentos.
+- Gera um arquivo `.json` único contendo todos os dados processados de forma organizada.
+
+## Como Usar
+
+Para executar o parser, utilize o seguinte comando:
+
+```bash
+go run main.go [flags] <caminho/para/arquivo.xlsx>
+```
+
+### Flags
+
+- `--data`: (Opcional) Especifica a data da planilha no formato `AAAA-MM-DD`. Se omitido, utiliza a data atual.
+- `--data-atualizacao`: (Opcional) Especifica a data de atualização da planilha no formato `AAAA-MM-DD`. Se omitido, utiliza o mesmo valor da flag `--data`.
+
+### Exemplo
+
+```bash
+go run main.go --data 2024-07-25 ./lista-de-precos.xlsx
+```
+
+Este comando irá processar o arquivo `lista-de-precos.xlsx` e gerar um novo arquivo chamado `lista-de-precos.json` no mesmo diretório.
+
+## Estrutura do JSON de Saída
+
+O arquivo de saída (`.json`) é estruturado da seguinte forma:
+
+```json
+{
+  "metadados": {
+    "data": "2024-07-25",
+    "data-atualizacao": "2024-07-25",
+    "observacoes": [
+      "Observação 1 da planilha...",
+      "Observação 2 da planilha..."
+    ]
+  },
+  "medicamentos": [
+    {
+      "SUBSTÂNCIA": "NOME DA SUBSTÂNCIA",
+      "CNPJ": "00.000.000/0000-00",
+      "LABORATÓRIO": "NOME DO LABORATÓRIO",
+      "CÓDIGO GGREM": "0000000000000",
+      "REGISTRO": "0000000000000",
+      "EAN 1": "0000000000000",
+      // ... outros campos do medicamento
+      "PF 18%": 123.45,
+      "RESTRIÇÃO HOSPITALAR": true,
+      // ...
+    }
+  ],
+  "laboratorios": {
+    "00.000.000/0000-00": "NOME DO LABORATÓRIO",
+    "00.000.000/0000-01": "NOME DE OUTRO LABORATÓRIO"
+  },
+  "apresentacoes": [
+    "APRESENTACAO SEM ACENTO 1",
+    "APRESENTACAO SEM ACENTO 2"
+  ]
+}
+```
