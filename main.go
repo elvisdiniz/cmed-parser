@@ -222,9 +222,6 @@ func main() {
 	var medicamentosList []Medicamento
 	linhaCabecalho := -1
 
-	valoresRegex := regexp.MustCompile(`^(PF |PMVG )([0-2]|S)`)
-	realRegex := regexp.MustCompile(`^[0-9]+(\.|,)[0-9]+\*?$`)
-
 	for i, row := range rows {
 		if linhaCabecalho == -1 {
 			if len(row) > 0 && row[0] == PrincipioAtivo {
@@ -244,22 +241,7 @@ func main() {
 				value = ""
 			}
 
-			strValue := value.(string)
-			if strValue == "-" || strValue == "" {
-				value = nil
-			} else if valoresRegex.MatchString(header) && realRegex.MatchString(strValue) {
-				strValue = strings.Replace(strValue, ",", ".", 1)
-				strValue = strings.Replace(strValue, "*", "", 1)
-				floatValue, err := strconv.ParseFloat(strValue, 64)
-				if err == nil {
-					value = floatValue
-				}
-			} else if header == CAP || header == Confaz87 || header == ICMS0 || header == RestricaoHospitalar || header == Comercializacao2024 {
-				value = strings.ToLower(strValue) == "sim"
-			} else if header == PrincipioAtivo && value == nil {
-				value = ""
-			}
-			medicamento[header] = value
+			medicamento[header] = processaValorCelula(value, header)
 		}
 
 		medicamentosList = append(medicamentosList, medicamento)
@@ -317,4 +299,33 @@ func removeAccents(s string) string {
 	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
 	result, _, _ := transform.String(t, s)
 	return result
+}
+
+func processaValorCelula(value interface{}, header string) interface{} {
+	valoresRegex := regexp.MustCompile(`^(PF |PMVG )([0-2]|S)`) 
+	realRegex := regexp.MustCompile(`^[0-9]+([\.,])[0-9]+\*?$`) 
+
+	if header == PrincipioAtivo && value == nil {
+		return ""
+	}
+
+	strValue, ok := value.(string)
+	if !ok {
+		return value
+	}
+
+	if strValue == "-" || strValue == "" {
+		return nil
+	} else if valoresRegex.MatchString(header) && realRegex.MatchString(strValue) {
+		strValue = strings.Replace(strValue, ",", ".", 1)
+		strValue = strings.Replace(strValue, "*", "", 1)
+		floatValue, err := strconv.ParseFloat(strValue, 64)
+		if err == nil {
+			return floatValue
+		}
+	} else if header == CAP || header == Confaz87 || header == ICMS0 || header == RestricaoHospitalar || header == Comercializacao2024 {
+		return strings.ToLower(strValue) == "sim"
+	}
+
+	return strValue
 }
