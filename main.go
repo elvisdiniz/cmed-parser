@@ -205,16 +205,16 @@ func writeJSONFile(output Output, infilePath string) error {
 	return nil
 }
 
-func processExcelFile(infilePath, data, dataAtualizacao string) error {
+func processExcelFile(infilePath, data, dataAtualizacao string) (Output, error) {
 	f, err := excelize.OpenFile(infilePath)
 	if err != nil {
-		return fmt.Errorf("failed to open excel file: %w", err)
+		return Output{}, fmt.Errorf("failed to open excel file: %w", err)
 	}
 
 	sheetName := f.GetSheetName(0)
 	rows, err := f.GetRows(sheetName)
 	if err != nil {
-		return fmt.Errorf("failed to get rows from sheet: %w", err)
+		return Output{}, fmt.Errorf("failed to get rows from sheet: %w", err)
 	}
 
 	var planilhaObservacoes []string
@@ -274,10 +274,7 @@ func processExcelFile(infilePath, data, dataAtualizacao string) error {
 		Apresentacoes: apresentacaoList,
 	}
 
-	if err := writeJSONFile(output, infilePath); err != nil {
-		return fmt.Errorf("failed to write JSON file: %w", err)
-	}
-	return nil
+	return output, nil
 }
 
 func main() {
@@ -299,7 +296,12 @@ func main() {
 		log.Fatal("O arquivo de entrada deve ser .xlsx")
 	}
 
-	if err := processExcelFile(infilePath, *data, *dataAtualizacao); err != nil {
+	output, err := processExcelFile(infilePath, *data, *dataAtualizacao)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := writeJSONFile(output, infilePath); err != nil {
 		log.Fatal(err)
 	}
 }
