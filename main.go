@@ -1,6 +1,7 @@
 package main
 
 import (
+	"slices"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -252,7 +253,7 @@ func main() {
 
 		medicamento := make(Medicamento)
 		for j, header := range cabecalho {
-			var value interface{}
+			var value any
 			if j < len(row) {
 				value = strings.TrimSpace(row[j])
 			} else {
@@ -273,13 +274,7 @@ func main() {
 
 		if medicamento[Apresentacao] != nil {
 			apresentacao := removeAccents(medicamento[Apresentacao].(string))
-			found := false
-			for _, item := range apresentacaoList {
-				if item == apresentacao {
-					found = true
-					break
-				}
-			}
+			found := slices.Contains(apresentacaoList, apresentacao)
 			if !found {
 				apresentacaoList = append(apresentacaoList, apresentacao)
 			}
