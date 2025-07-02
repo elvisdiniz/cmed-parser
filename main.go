@@ -223,7 +223,7 @@ func main() {
 	linhaCabecalho := -1
 
 	valoresRegex := regexp.MustCompile(`^(PF |PMVG )([0-2]|S)`)
-	realRegex := regexp.MustCompile(`^[0-9]+(\.|,)[0-9]+$`)
+	realRegex := regexp.MustCompile(`^[0-9]+(\.|,)[0-9]+\*?$`)
 
 	for i, row := range rows {
 		if linhaCabecalho == -1 {
@@ -249,6 +249,7 @@ func main() {
 				value = nil
 			} else if valoresRegex.MatchString(header) && realRegex.MatchString(strValue) {
 				strValue = strings.Replace(strValue, ",", ".", 1)
+				strValue = strings.Replace(strValue, "*", "", 1)
 				floatValue, err := strconv.ParseFloat(strValue, 64)
 				if err == nil {
 					value = floatValue
