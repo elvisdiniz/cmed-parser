@@ -186,6 +186,24 @@ type Output struct {
 	Apresentacoes []string          `json:"apresentacoes"`
 }
 
+func writeJSONFile(output Output, infilePath string) error {
+	outfilePath := strings.TrimSuffix(infilePath, filepath.Ext(infilePath)) + ".json"
+	jsonFile, err := os.Create(outfilePath)
+	if err != nil {
+		return fmt.Errorf("failed to create json file: %w", err)
+	}
+	defer jsonFile.Close()
+
+	encoder := json.NewEncoder(jsonFile)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(output); err != nil {
+		return fmt.Errorf("failed to encode json: %w", err)
+	}
+
+	fmt.Printf("Arquivo %s criado!\n", outfilePath)
+	return nil
+}
+
 func main() {
 	data := flag.String("data", time.Now().Format("2006-01-02"), "Data da planilha no formato AAAA-MM-DD")
 	dataAtualizacao := flag.String("data-atualizacao", "", "Data de atualização da planilha no formato AAAA-MM-DD")
@@ -279,20 +297,9 @@ func main() {
 		Apresentacoes: apresentacaoList,
 	}
 
-	outfilePath := strings.TrimSuffix(infilePath, filepath.Ext(infilePath)) + ".json"
-	jsonFile, err := os.Create(outfilePath)
-	if err != nil {
+	if err := writeJSONFile(output, infilePath); err != nil {
 		log.Fatal(err)
 	}
-	defer jsonFile.Close()
-
-	encoder := json.NewEncoder(jsonFile)
-	encoder.SetIndent("", "  ")
-	if err := encoder.Encode(output); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("Arquivo %s criado!\n", outfilePath)
 }
 
 func removeAccents(s string) string {
@@ -302,8 +309,8 @@ func removeAccents(s string) string {
 }
 
 func processaValorCelula(value interface{}, header string) interface{} {
-	valoresRegex := regexp.MustCompile(`^(PF |PMVG )([0-2]|S)`) 
-	realRegex := regexp.MustCompile(`^[0-9]+([\.,])[0-9]+\*?$`) 
+	valoresRegex := regexp.MustCompile(`^(PF |PMVG )([0-2]|S)`)
+	realRegex := regexp.MustCompile(`^[0-9]+([\.,])[0-9]+\*?$`)
 
 	if header == PrincipioAtivo && value == nil {
 		return ""
