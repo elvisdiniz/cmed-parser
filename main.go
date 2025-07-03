@@ -187,6 +187,18 @@ type Output struct {
 	Apresentacoes []string          `json:"apresentacoes"`
 }
 
+func convertIntToExcelColumn(index int) string {
+	if index < 0 {
+		return ""
+	}
+	column := ""
+	for index >= 0 {
+		column = fmt.Sprint('A'+index%26) + column
+		index = index/26 - 1
+	}
+	return column
+}
+
 func writeJSONFile(output Output, infilePath string) error {
 	outfilePath := strings.TrimSuffix(infilePath, filepath.Ext(infilePath)) + ".json"
 	jsonFile, err := os.Create(outfilePath)
@@ -217,6 +229,8 @@ func processExcelFile(infilePath, data, dataAtualizacao string) (Output, error) 
 		return Output{}, fmt.Errorf("failed to get rows from sheet: %w", err)
 	}
 
+	removeSpaces := regexp.MustCompile(`(\s+)`)
+
 	var planilhaObservacoes []string
 	laboratoriosList := make(map[string]string)
 	var apresentacaoList []string
@@ -226,6 +240,11 @@ func processExcelFile(infilePath, data, dataAtualizacao string) (Output, error) 
 	for i, row := range rows {
 		if linhaCabecalho == -1 {
 			if len(row) > 0 && row[0] == PrincipioAtivo {
+				for j, header := range cabecalho {
+					if !strings.EqualFold(removeSpaces.ReplaceAllString(header, ""), removeSpaces.ReplaceAllString(row[j], "")) {
+						return Output{}, fmt.Errorf("cabeçalho inválido na linha %d e coluna %s: esperado '%s', encontrado '%s'", i+1, convertIntToExcelColumn(j), header, row[j])
+					}
+				}
 				linhaCabecalho = i
 			} else if len(row) > 0 {
 				planilhaObservacoes = append(planilhaObservacoes, row[0])
