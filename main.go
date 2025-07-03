@@ -188,15 +188,13 @@ type Output struct {
 }
 
 func convertIntToExcelColumn(index int) string {
-	if index < 0 {
-		return ""
-	}
-	column := ""
+	var chars []byte
 	for index >= 0 {
-		column = fmt.Sprint('A'+index%26) + column
+		remainder := index % 26
+		chars = append([]byte{byte('A' + remainder)}, chars...) // prepend
 		index = index/26 - 1
 	}
-	return column
+	return string(chars)
 }
 
 func writeJSONFile(output Output, infilePath string) error {
