@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -84,6 +85,41 @@ func TestConvertIntToExcelColumn(t *testing.T) {
 	}
 }
 
+func TestWriteJSONFile(t *testing.T) {
+	// Create a temporary directory for the test file
+	tempDir := t.TempDir()
+	infilePath := filepath.Join(tempDir, "test-file.xlsx")
+	outputFilePath := filepath.Join(tempDir, "test-file.json")
+
+	// Create a sample output
+	output := Output{
+		Metadados: Metadados{
+			Data:            "2025-07-03",
+			DataAtualizacao: "2025-07-04",
+			Observacoes:     []string{"Observação 1", "Observação 2"},
+		},
+		Medicamentos: []Medicamento{
+			{"SUBSTÂNCIA": "IBUPROFENO", "CNPJ": "12.345.678/0001-90"},
+			{"SUBSTÂNCIA": "PARACETAMOL", "CNPJ": "98.765.432/0001-10"},
+		},
+		Laboratorios: map[string]string{
+			"12.345.678/0001-90": "LAB A",
+			"98.765.432/0001-10": "LAB B",
+		},
+		Apresentacoes: []string{"COM REV", "GOTAS"},
+	}
+
+	// Write the JSON file
+	if err := writeJSONFile(output, infilePath); err != nil {
+		t.Fatalf("writeJSONFile failed: %v", err)
+	}
+
+	// Check if the file exists
+	if _, err := os.Stat(outputFilePath); os.IsNotExist(err) {
+		t.Fatalf("expected JSON file %s to exist, but it does not", outputFilePath)
+	}
+}
+
 func TestProcessExcelFile(t *testing.T) {
 	// Create a temporary directory for the test file
 	tempDir := t.TempDir()
@@ -130,22 +166,22 @@ func TestProcessExcelFile(t *testing.T) {
 	}
 
 	// Write data rows
-	f.SetCellValue(sheetName, "A4", "IBUPROFENO") // SUBSTÂNCIA
+	f.SetCellValue(sheetName, "A4", "IBUPROFENO")         // SUBSTÂNCIA
 	f.SetCellValue(sheetName, "B4", "12.345.678/0001-90") // CNPJ
-	f.SetCellValue(sheetName, "C4", "LAB A") // LABORATÓRIO
-	f.SetCellValue(sheetName, "J4", "COM REV") // APRESENTAÇÃO
-	f.SetCellValue(sheetName, "N4", "10,50") // PF Sem Impostos
-	f.SetCellValue(sheetName, "BN4", "Sim") // RESTRIÇÃO HOSPITALAR
-	f.SetCellValue(sheetName, "BO4", "Não") // CAP
-	f.SetCellValue(sheetName, "BP4", "Sim") // CONFAZ 87
+	f.SetCellValue(sheetName, "C4", "LAB A")              // LABORATÓRIO
+	f.SetCellValue(sheetName, "J4", "COM REV")            // APRESENTAÇÃO
+	f.SetCellValue(sheetName, "N4", "10,50")              // PF Sem Impostos
+	f.SetCellValue(sheetName, "BN4", "Sim")               // RESTRIÇÃO HOSPITALAR
+	f.SetCellValue(sheetName, "BO4", "Não")               // CAP
+	f.SetCellValue(sheetName, "BP4", "Sim")               // CONFAZ 87
 
-	f.SetCellValue(sheetName, "A5", "PARACETAMOL") // SUBSTÂNCIA
+	f.SetCellValue(sheetName, "A5", "PARACETAMOL")        // SUBSTÂNCIA
 	f.SetCellValue(sheetName, "B5", "98.765.432/0001-10") // CNPJ
-	f.SetCellValue(sheetName, "C5", "LAB B") // LABORATÓRIO
-	f.SetCellValue(sheetName, "J5", "GOTAS") // APRESENTAÇÃO
-	f.SetCellValue(sheetName, "N5", "25,00*") // PF Sem Impostos
-	f.SetCellValue(sheetName, "BN5", "Não") // RESTRIÇÃO HOSPITALAR
-	f.SetCellValue(sheetName, "BO5", "Sim") // CAP
+	f.SetCellValue(sheetName, "C5", "LAB B")              // LABORATÓRIO
+	f.SetCellValue(sheetName, "J5", "GOTAS")              // APRESENTAÇÃO
+	f.SetCellValue(sheetName, "N5", "25,00*")             // PF Sem Impostos
+	f.SetCellValue(sheetName, "BN5", "Não")               // RESTRIÇÃO HOSPITALAR
+	f.SetCellValue(sheetName, "BO5", "Sim")               // CAP
 
 	// Save the temporary file
 	if err := f.SaveAs(infilePath); err != nil {
