@@ -60,6 +60,30 @@ func TestProcessaValorCelula(t *testing.T) {
 	}
 }
 
+func TestConvertIntToExcelColumn(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    int
+		expected string
+	}{
+		{"zero", 0, "A"},
+		{"um", 1, "B"},
+		{"vinte e seis", 25, "Z"},
+		{"vinte e sete", 26, "AA"},
+		{"cinquenta e um", 50, "AY"},
+		{"setenta e cinco", 74, "BW"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := convertIntToExcelColumn(tc.input)
+			if result != tc.expected {
+				t.Errorf("esperado: %s, obtido: %s", tc.expected, result)
+			}
+		})
+	}
+}
+
 func TestProcessExcelFile(t *testing.T) {
 	// Create a temporary directory for the test file
 	tempDir := t.TempDir()
