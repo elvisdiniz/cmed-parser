@@ -1,6 +1,8 @@
 package main
 
 import (
+	"archive/zip"
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -215,6 +217,42 @@ func writeJSONFile(output Output, infilePath string) error {
 	return nil
 }
 
+func writeZipFile(output Output, infilePath string) error {
+	outfilePath := strings.TrimSuffix(infilePath, filepath.Ext(infilePath)) + ".zip"
+
+	// Create a buffer to write our archive to.
+	buf := new(bytes.Buffer)
+
+	// Create a new zip archive.
+	zipWriter := zip.NewWriter(buf)
+
+	// Create a new file in the zip archive.
+	zipFile, err := zipWriter.Create(strings.TrimSuffix(filepath.Base(infilePath), filepath.Ext(infilePath)) + ".json")
+	if err != nil {
+		return fmt.Errorf("failed to create zip file: %w", err)
+	}
+
+	// Write the JSON data to the file in the zip archive.
+	encoder := json.NewEncoder(zipFile)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(output); err != nil {
+		return fmt.Errorf("failed to encode json: %w", err)
+	}
+
+	// Make sure to check the error on Close.
+	if err := zipWriter.Close(); err != nil {
+		return fmt.Errorf("failed to close zip writer: %w", err)
+	}
+
+	// Write the .zip file to disk.
+	if err := os.WriteFile(outfilePath, buf.Bytes(), 0644); err != nil {
+		return fmt.Errorf("failed to write zip file: %w", err)
+	}
+
+	fmt.Printf("Arquivo %s criado!\n", outfilePath)
+	return nil
+}
+
 func processExcelFile(infilePath, data, dataAtualizacao string) (Output, error) {
 	f, err := excelize.OpenFile(infilePath)
 	if err != nil {
@@ -332,6 +370,7 @@ func processaValorCelula(value any, header string) any {
 func main() {
 	data := flag.String("data", time.Now().Format("2006-01-02"), "Data da planilha no formato AAAA-MM-DD")
 	dataAtualizacao := flag.String("data-atualizacao", "", "Data de atualização da planilha no formato AAAA-MM-DD")
+	zipOutput := flag.Bool("zip", false, "Gerar arquivo zipado ao invés de JSON")
 	flag.Parse()
 
 	if *dataAtualizacao == "" {
@@ -353,7 +392,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := writeJSONFile(output, infilePath); err != nil {
-		log.Fatal(err)
+	if *zipOutput {
+		if err := writeZipFile(output, infilePath); err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		if err := writeJSONFile(output, infilePath); err != nil {
+			log.Fatal(err)
+		}
 	}
 }
