@@ -1,9 +1,16 @@
 {
   "name": "CMED Parser",
   "image": "mcr.microsoft.com/devcontainers/go:1-1.24-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installOhMyZsh": false,
+      "installOhMyZshConfig": false
+    }
+  },
   "customizations": {
     "vscode": {
       "settings": {
+        "dotfiles.repository": "elvisdiniz/dotfiles",
         "go.toolsManagement.autoUpdate": true
       }
     }
