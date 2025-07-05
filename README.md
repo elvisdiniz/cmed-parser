@@ -47,6 +47,7 @@ Você pode encontrar os binários pré-compilados para Linux, macOS e Windows na
 
 - `--data`: (Opcional) Especifica a data da planilha no formato `AAAA-MM-DD`. Se omitido, utiliza a data atual.
 - `--data-atualizacao`: (Opcional) Especifica a data de atualização da planilha no formato `AAAA-MM-DD`. Se omitido, utiliza o mesmo valor da flag `--data`.
+- `--zip`: (Opcional) Se especificado, o arquivo de saída será compactado em formato `.zip`.
 
 ### Exemplo
 
