@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -436,8 +437,17 @@ func TestProcessExcelFile(t *testing.T) {
 		Apresentacoes: []string{"COM REV", "GOTAS"},
 	}
 
+	// Parse the date strings to time.Time
+	data, err := time.Parse("2006-01-02", "2025-07-03")
+	if err != nil {
+		t.Fatalf("failed to parse data: %v", err)
+	}
+	dataAtualizacao, err := time.Parse("2006-01-02", "2025-07-04")
+	if err != nil {
+		t.Fatalf("failed to parse dataAtualizacao: %v", err)
+	}
 	// Process the file
-	output, err := processExcelFile(infilePath, "2025-07-03", "2025-07-04")
+	output, err := processExcelFile(infilePath, data, dataAtualizacao)
 	if err != nil {
 		t.Fatalf("processExcelFile failed: %v", err)
 	}

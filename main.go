@@ -253,7 +253,7 @@ func writeZipFile(output Output, infilePath string) error {
 	return nil
 }
 
-func processExcelFile(infilePath, data, dataAtualizacao string) (Output, error) {
+func processExcelFile(infilePath string, data, dataAtualizacao time.Time) (Output, error) {
 	f, err := excelize.OpenFile(infilePath)
 	if err != nil {
 		return Output{}, fmt.Errorf("failed to open excel file: %w", err)
@@ -320,8 +320,8 @@ func processExcelFile(infilePath, data, dataAtualizacao string) (Output, error) 
 
 	output := Output{
 		Metadados: Metadados{
-			Data:            data,
-			DataAtualizacao: dataAtualizacao,
+			Data:            data.Format("2006-01-02"),
+			DataAtualizacao: dataAtualizacao.Format("2006-01-02"),
 			Observacoes:     planilhaObservacoes,
 		},
 		Medicamentos:  medicamentosList,
@@ -377,6 +377,17 @@ func main() {
 		*dataAtualizacao = *data
 	}
 
+	// convert data and dataAtualizacao to time.Time to validate the format
+	var dataTime time.Time
+	var dataAtualizacaoTime time.Time
+	var err error
+	if dataTime, err = time.Parse("2006-01-02", *data); err != nil {
+		log.Fatalf("Data inválida: %s. Use o formato AAAA-MM-DD", *data)
+	}
+	if dataAtualizacaoTime, err = time.Parse("2006-01-02", *dataAtualizacao); err != nil {
+		log.Fatalf("Data de atualização inválida: %s. Use o formato AAAA-MM-DD", *dataAtualizacao)
+	}
+
 	if len(flag.Args()) != 1 {
 		log.Fatal("Uso: go run main.go [flags] <arquivo.xlsx>")
 	}
@@ -387,7 +398,7 @@ func main() {
 		log.Fatal("O arquivo de entrada deve ser .xlsx")
 	}
 
-	output, err := processExcelFile(infilePath, *data, *dataAtualizacao)
+	output, err := processExcelFile(infilePath, dataTime, dataAtualizacaoTime)
 	if err != nil {
 		log.Fatal(err)
 	}
