@@ -17,10 +17,30 @@ O programa aceita como entrada apenas arquivos no formato `.xlsx`. Caso o seu ar
 
 ## Como Usar
 
-Para executar o parser, utilize o seguinte comando:
+Existem duas maneiras de executar o parser: utilizando o `go run` para compilar e executar o código-fonte diretamente, ou utilizando o binário pré-compilado específico para o seu sistema operacional.
+
+### Usando `go run`
+
+Para executar o parser diretamente do código-fonte, utilize o seguinte comando:
 
 ```bash
 go run main.go [flags] <caminho/para/arquivo.xlsx>
+```
+
+### Usando o binário pré-compilado
+
+Você pode encontrar os binários pré-compilados para Linux, macOS e Windows na seção de [Releases](https://github.com/elvisdiniz/cmed-parser/releases) do projeto. Após baixar e descompactar o arquivo correspondente ao seu sistema operacional, você pode executar o parser da seguinte forma:
+
+#### Linux/macOS
+
+```bash
+./cmed-parser-[linux|macos]-amd64 [flags] <caminho/para/arquivo.xlsx>
+```
+
+#### Windows
+
+```bash
+.\cmed-parser-windows-amd64.exe [flags] <caminho/para/arquivo.xlsx>
 ```
 
 ### Flags
@@ -30,8 +50,16 @@ go run main.go [flags] <caminho/para/arquivo.xlsx>
 
 ### Exemplo
 
+#### `go run`
+
 ```bash
 go run main.go --data 2024-07-25 ./lista-de-precos.xlsx
+```
+
+#### Binário (Linux/macOS)
+
+```bash
+./cmed-parser-linux-amd64 --data 2024-07-25 ./lista-de-precos.xlsx
 ```
 
 Este comando irá processar o arquivo `lista-de-precos.xlsx` e gerar um novo arquivo chamado `lista-de-precos.json` no mesmo diretório.
