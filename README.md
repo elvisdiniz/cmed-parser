@@ -11,6 +11,10 @@ Este projeto consiste em um parser da tabela de preços de medicamentos da CMED 
 - Agrega listas únicas de laboratórios (por CNPJ) e apresentações de medicamentos.
 - Gera um arquivo `.json` único contendo todos os dados processados de forma organizada.
 
+## Formato de Entrada
+
+O programa aceita como entrada apenas arquivos no formato `.xlsx`. Caso o seu arquivo esteja em outro formato (como `.xls` ou `.ods`), é necessário convertê-lo para `.xlsx` antes de usar o parser. Você pode fazer essa conversão utilizando o Microsoft Excel, LibreOffice Calc ou outro programa compatível.
+
 ## Como Usar
 
 Para executar o parser, utilize o seguinte comando:
